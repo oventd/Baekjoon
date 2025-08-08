@@ -51,6 +51,6 @@ def main():
         elif player[GENDER] == GIRL:
             girl(switches, player[NUMBER])
 
-    print(" ".join(map(str, switches)))
+    print(" ".join(map(str, switches))[:-1])
 
 main()
