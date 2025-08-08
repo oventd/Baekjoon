@@ -1,21 +1,9 @@
-GENDER = "gender"
-NUMBER = "number"
-
 BOY = 1
 GIRL = 2
 
 def boy(switches, number):
-    multiple = number
-    count = 1
-    while True:
-        if multiple > len(switches):
-            break
-        index = multiple - 1
-        switches[index] = (switches[index] + 1) % 2
-        
-        count = count + 1
-        multiple = number * count
-
+    for index in range(number-1, len(switches), number):
+        switches[index] ^= 1
 
 def girl(switches, number):
     if number < 1 or number > len(switches):
@@ -31,26 +19,22 @@ def girl(switches, number):
         front_index = front_index - 1
         back_index = back_index + 1
     for i in range(front_index,back_index+1):
-        switches[i] = (switches[i] + 1)% 2
+        switches[i] ^= 1
 
 def main():
     switch_count = int(input())
-    switches = list(map(int,input().split(" ")))
+    switches = list(map(int,input().split()))
 
     player_count = int(input())
-    players = []
     for i in range(player_count):
-        gender, number = list(map(int,input().split(" ")))
-        player = {GENDER:gender, NUMBER:number} 
-        players.append(player)
+        gender, number = list(map(int,input().split()))
 
-    for i in range(player_count):
-        player = players[i]
-        if player[GENDER] == BOY:
-            boy(switches, player[NUMBER])
-        elif player[GENDER] == GIRL:
-            girl(switches, player[NUMBER])
+        if gender == BOY:
+            boy(switches, number)
+        elif gender == GIRL:
+            girl(switches, number)
 
-    print(" ".join(map(str, switches))[:-1])
+    for i in range(0, switch_count, 20):
+        print(" ".join(map(str, switches[i:i+20])))
 
 main()
