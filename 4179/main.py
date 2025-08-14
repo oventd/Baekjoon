@@ -1,56 +1,50 @@
 from collections import deque
+
 n, m = map(int, input().split())
-miro = []
-for _ in range(n):
-    miro.append(list(input()))
+miro = [list(input().strip()) for _ in range(n)]
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-def bfs():
-    flame_visited = [[False]*m for _ in range(n)]
-    jihun_visited = [[False]*m for _ in range(n)]
+fire_time = [[-1]*m for _ in range(n)]
+jihun_time = [[-1]*m for _ in range(n)]
+queue = deque()
 
-    time = [[False]*m for _ in range(n)]
-    queue = deque() 
-    
+for y in range(n):
+    for x in range(m):
+        if miro[y][x] == 'F':
+            fire_time[y][x] = 0
+            queue.append(('F', y, x))
 
-    for y, row in enumerate(miro):
-        for x, value in enumerate(row):
-            if value == "#":
-                jihun_visited[y][x] = True
-                flame_visited[y][x] = True
-                continue
-            if value == "J":
-                jihun_visited[y][x] = True
-                time[y][x] = 0
-                queue.append((y,x,"J"))
-            if value == "F":
-                flame_visited[y][x] = True
-                queue.append((y,x,"F"))
-    while queue:
-        qy, qx, obj = queue.popleft()
-        
-        for i in range(4):
-            ny, nx = qy+dy[i] , qx+dx[i]
+while queue:
+    obj, y, x = queue.popleft()
+    if obj != 'F':
+        continue
+    for i in range(4):
+        ny, nx = y+dy[i], x+dx[i]
+        if 0 <= ny < n and 0 <= nx < m:
+            if miro[ny][nx] != '#' and fire_time[ny][nx] == -1:
+                fire_time[ny][nx] = fire_time[y][x] + 1
+                queue.append(('F', ny, nx))
 
-            if not (0<=ny<n and 0<=nx<m):
-                if obj == "J":
-                    print(time[qy][qx] + 1)
-                    return
-                continue
-            if obj == "F":
-                if flame_visited[ny][nx]:
-                    continue
-                if miro[ny][nx]=="J":
-                    print("IMPOSSIBLE")
-                    return
-                 
-            if obj == "J":
+for y in range(n):
+    for x in range(m):
+        if miro[y][x] == 'J':
+            jihun_time[y][x] = 0
+            queue.append(('J', y, x))
 
-            
-        if obj == "J":
-            miro[qy][qx] = "."
-    print("IMPOSSIBLE")
-    return
-bfs()
+while queue:
+    obj, y, x = queue.popleft()
+    if obj != 'J':
+        continue
+    for i in range(4):
+        ny, nx = y+dy[i], x+dx[i]
+        if not (0 <= ny < n and 0 <= nx < m):
+            print(jihun_time[y][x] + 1)
+            exit()
+        if miro[ny][nx] != '#' and jihun_time[ny][nx] == -1:
+            if fire_time[ny][nx] == -1 or fire_time[ny][nx] > jihun_time[y][x] + 1:
+                jihun_time[ny][nx] = jihun_time[y][x] + 1
+                queue.append(('J', ny, nx))
+
+print("IMPOSSIBLE")
