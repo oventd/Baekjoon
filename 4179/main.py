@@ -11,7 +11,7 @@ jihun_time = [[-1]*m for _ in range(n)]
 queue = deque()
 
 for y in range(n):
-    for x in range(m):
+    for x in range(m):  
         if miro[y][x] == 'F':
             fire_time[y][x] = 0
             queue.append(('F', y, x))
