@@ -1,22 +1,22 @@
-n_max = int(input())
-data = []
-for _ in range(n_max):
-    data.append(int(input()))
-data_set = set(data)
+import bisect
+
+n = int(input())
+data = [int(input()) for _ in range(n)]
+data.sort()
 
 sum_list = []
-for i in range(n_max):
-    for j in range(i, n_max):
-        sum_list.append(data[i]+data[j])
+for i in range(n):
+    for j in range(i, n):
+        sum_list.append(data[i] + data[j])
 sum_list.sort()
 
 result = 0
 
-for t in data[2:]:
-    for sn in sum_list:
-        if sn > t:
-            break
-        if t- sn in data_set:
-            if result < t:
-                result = t
+for i in range(n):
+    for j in range(i + 1):
+        target = data[i] - data[j]
+        idx = bisect.bisect_left(sum_list, target)
+        if idx < len(sum_list) and sum_list[idx] == target:
+            result = max(result, data[i])
+
 print(result)
