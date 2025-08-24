@@ -1,52 +1,30 @@
-
+def get_primes(n):
+    """에라토스테네스의 체로 n 이하의 소수 리스트 리턴"""
+    sieve = [True] * (n + 1)
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(n ** 0.5) + 1):
+        if sieve[i]:
+            for j in range(i * i, n + 1, i):
+                sieve[j] = False
+    return [i for i, is_p in enumerate(sieve) if is_p]
 
 N = int(input())
+primes = get_primes(N)
 
-def is_prime(num: int) -> bool:
-    """Check if num is prime."""
-    if num < 2:
-        return False
-    if num == 2:
-        return True
-    if num % 2 == 0:
-        return False
-    for i in range(3, int(num ** 0.5) + 1, 2):
-        if num % i == 0:
-            return False
-    return True
-def next_prime(n: int) -> int:
-    candidate = n + 1
-    while True:
-        if is_prime(candidate):
-            return candidate
-        candidate += 1
-def priv_prime(n:int):
-    candidate = n - 1
-    while True:
-        if is_prime(candidate):
-            return candidate
-        candidate -= 1
-
-left = 2
-right = N if is_prime(N) else priv_prime(N)
 count = 0
-while left<=right:
-    s = 0
-    n = left
-    while True:
-        s += n
-        if n == right:
-            break
-        n = next_prime(n)
-    if s == N:
-        count += 1
-        left = next_prime(left)
-        right =  priv_prime(N)
-    if s > N:
-        left = next_prime(left)
-    elif s < N:
-        right = priv_prime(right)
+left = right= 0
+s=0
+
+while True:
+    if s >=N:
+        if s == N:
+            count +=1
+        s -= primes[left]
+        left += primes[left]
+    elif right == len(primes):
+        break
+    else:
+        s += primes[right]
+        right += 1
 
 print(count)
-
-
