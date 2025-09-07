@@ -50,6 +50,7 @@ else
     touch "main.py"
     echo "https://www.acmicpc.net/problem/$n" > README.md
     popd >/dev/null
+    cd "$n"
 fi
 
 # -----------------------------
